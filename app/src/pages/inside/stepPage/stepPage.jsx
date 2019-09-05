@@ -236,7 +236,7 @@ export class StepPage extends Component {
 
   handleUnlinkIssue = () =>
     this.props.unlinkIssueAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleUnlinkSingleTicket = (testItem) => (ticketId) => {
@@ -253,28 +253,28 @@ export class StepPage extends Component {
     ];
 
     this.props.unlinkIssueAction(items, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
   };
 
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleIgnoreInAA = () =>
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleIncludeInAA = () =>
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleEditDefects = (eventData) => {
@@ -282,11 +282,11 @@ export class StepPage extends Component {
     if (this.isDefectGroupOperationAvailable(eventData)) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
-        data: { item: items[0], fetchFunc: this.props.fetchTestItemsAction },
+        data: { item: items[0], fetchFunc: this.unselectAndFetchItems },
       });
     } else {
       this.props.editDefectsAction(items, {
-        fetchFunc: this.props.fetchTestItemsAction,
+        fetchFunc: this.unselectAndFetchItems,
         debugMode: this.props.debugMode,
       });
     }
@@ -304,11 +304,19 @@ export class StepPage extends Component {
     );
   };
 
+  unselectAndFetchItems = () => {
+    this.props.unselectAllSteps();
+    this.props.fetchTestItemsAction();
+  };
+
   proceedWithValidItems = () => {
+    const {
+      lastOperation: { operationName, operationArgs },
+      selectedItems,
+    } = this.props;
+
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.PROCEED_VALID_ITEMS);
-    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
-    });
+    this.props.proceedWithValidItemsAction(operationName, selectedItems, operationArgs);
   };
 
   deleteItems = () => {
@@ -383,6 +391,7 @@ export class StepPage extends Component {
             selectedItems={selectedItems}
             onAllItemsSelect={this.handleAllStepsSelection}
             onItemSelect={this.handleOneItemSelection}
+            onItemsSelect={this.props.selectStepsAction}
             loading={loading}
             listView={listView}
             onEditDefect={this.handleEditDefects}

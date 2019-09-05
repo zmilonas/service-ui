@@ -10,7 +10,7 @@ RELEASE_DIR=release
 BUILD_DEPS:= github.com/avarabyeu/releaser github.com/golangci/golangci-lint/cmd/golangci-lint
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/gopkg.in/reportportal/commons-go.v5
+PACKAGE_COMMONS=github.com/reportportal/commons-go
 REPO_NAME=reportportal/service-ui
 
 UI_BUILD_REACT=app/
@@ -27,10 +27,8 @@ help:
 
 get-build-deps:
 	$(GO) get -u $(BUILD_DEPS)
-#	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
 
 test:
-	ls -la
 	$(GO) test ${GODIRS_NOVENDOR}
 
 
