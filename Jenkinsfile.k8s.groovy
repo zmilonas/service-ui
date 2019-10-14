@@ -29,7 +29,9 @@ podTemplate(
                 hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
                 secretVolume(mountPath: '/etc/.dockercreds', secretName: 'docker-creds'),
                 hostPathVolume(mountPath: '/go/pkg/mod', hostPath: '/tmp/jenkins/go')
-        ]
+        ],
+        resourceRequestMemory: '2048Mi',
+        resourceLimitMemory: '4096Mi'
 ) {
 
     node("${label}") {
