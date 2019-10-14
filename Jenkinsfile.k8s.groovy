@@ -8,8 +8,12 @@ println("${label}")
 podTemplate(
         label: "${label}",
         containers: [
-                containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine'),
-                containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+                containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine',
+                        resourceRequestMemory: '200Mi',
+                        resourceLimitMemory: '400Mi'),
+                containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true,
+                        resourceRequestMemory: '20Mi',
+                        resourceLimitMemory: '40Mi'),
                 containerTemplate(
                         name: 'nodejs',
                         image: 'node:11-alpine',
@@ -20,11 +24,21 @@ podTemplate(
                         ],
                         resourceRequestMemory: '2048Mi',
                         resourceLimitMemory: '4096Mi'),
-                containerTemplate(name: 'golang', image: 'golang:1.12.7', ttyEnabled: true, command: 'cat'),
-                containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
-                containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true),
-                containerTemplate(name: 'yq', image: 'mikefarah/yq', command: 'cat', ttyEnabled: true),
-                containerTemplate(name: 'httpie', image: 'blacktop/httpie', command: 'cat', ttyEnabled: true)
+                containerTemplate(name: 'golang', image: 'golang:1.12.7', ttyEnabled: true, command: 'cat',
+                        resourceRequestMemory: '30Mi',
+                        resourceLimitMemory: '60Mi'),
+                containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true,
+                        resourceRequestMemory: '20Mi',
+                        resourceLimitMemory: '40Mi'),
+                containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true,
+                        resourceRequestMemory: '20Mi',
+                        resourceLimitMemory: '40Mi'),
+                containerTemplate(name: 'yq', image: 'mikefarah/yq', command: 'cat', ttyEnabled: true,
+                        resourceRequestMemory: '5Mi',
+                        resourceLimitMemory: '10Mi'),
+                containerTemplate(name: 'httpie', image: 'blacktop/httpie', command: 'cat', ttyEnabled: true,
+                        resourceRequestMemory: '5Mi',
+                        resourceLimitMemory: '10Mi')
         ],
         imagePullSecrets: ["regcred"],
         volumes: [
